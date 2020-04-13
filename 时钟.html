@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+			background:#fff ;
+		}
+		ul,li,div{
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			list-style: none;
+		}
+		.blackColor{
+			background-color: #000;
+		}
+		.whiteColor{
+			background-color: #fff;
+		}
+		#box{
+			width: 295px;
+			height: 295px;
+			border-radius: 295px;
+			position: fixed;
+			top:50px;
+			left:200px;
+		}
+		#box>ul{
+			width:100%;
+			height: 100%;
+			position: absolute;
+		}
+		#hourKedu li,#secondKedu li{
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+		}
+		#hourKedu{z-index: 2;}
+		#secondKedu{z-index: 1;}
+		.HK{
+			width: 1px;
+			height:12px;
+			transform-origin: center 147.5px;
+		}
+		.SK{
+			width: 1px;
+			height:8px;
+			background: #bbb;
+			transform-origin: center 147.5px; 
+		}
+		#zhen{
+			width: 8px!important;
+			height: 150px!important;
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%,-100%);
+			z-index: 3;
+		}
+		#zhen>li{
+			position: absolute;
+			bottom: 0;
+			transform-origin: center bottom;
+		}
+		#hour{
+			width: 6px;
+			height: 80px;
+			left: 50%;
+			transform: translateX(-50%);
+			border-radius:6px 6px 0 0 ;
+			animation:hourmove 216000s linear 0s infinite;
+		}
+		#hour::after{
+			content: '';
+			width: 2px;
+			height: 15px;
+			top:3px;
+			left: 50%;
+			transform: translateX(-50%);
+			position: absolute;
+			border-radius: 2px;
+		}
+		#minute{
+			width: 4px;
+			height: 100px;
+			left: 50%;
+			transform: translateX(-50%);
+			border-radius:4px 4px 0 0 ;
+			animation:minutemove 3600s linear 0s infinite;
+		}
+		#minute::after{
+			content: '';
+			width: 1px;
+			height: 20px;
+			top:3px;
+			left: 50%;
+			transform: translateX(-50%);
+			position: absolute;
+			border-radius: 2px;
+		}
+		#second{
+			width: 1px;
+			height: 160px;
+			background-color: red;
+			left: 50%;
+			transform: translateX(-50%);
+			bottom: -12px!important;
+			transform-origin: center 92.5%!important;
+			/* animation: secondmove 60s steps(60) 0s infinite; */
+		}
+		#zhenCover{
+			width: 8px;
+			height: 8px;
+			border:2px solid red;
+			background-color: #fff;
+			position: absolute;
+			bottom: -5px;
+			border-radius: 50%;
+			left: 50%;
+			transform: translateX(-50%);
+		} 
+		.HK::after{
+			position: absolute;
+			top:21.5px;
+			left: 50%;
+		}
+		.HK:nth-of-type(1)::after{content: '1';transform: translateX(-50%) rotate(-30deg);}
+		.HK:nth-of-type(2)::after{content: '2';transform: translateX(-50%) rotate(-60deg);}
+		.HK:nth-of-type(3)::after{content: '3';transform: translateX(-50%) rotate(-90deg);}
+		.HK:nth-of-type(4)::after{content: '4';transform: translateX(-50%) rotate(-120deg);}
+		.HK:nth-of-type(5)::after{content: '5';transform: translateX(-50%) rotate(-150deg);}
+		.HK:nth-of-type(6)::after{content: '6';transform: translateX(-50%) rotate(-180deg);}
+		.HK:nth-of-type(7)::after{content: '7';transform: translateX(-50%) rotate(-210deg);}
+		.HK:nth-of-type(8)::after{content: '8';transform: translateX(-50%) rotate(-240deg);}
+		.HK:nth-of-type(9)::after{content: '9';transform: translateX(-50%) rotate(-270deg);}
+		.HK:nth-of-type(10)::after{content: '10';transform: translateX(-50%) rotate(-300deg);}
+		.HK:nth-of-type(11)::after{content: '11';transform: translateX(-50%) rotate(-330deg);}
+		.HK:nth-of-type(12)::after{content: '12';transform: translateX(-50%) rotate(0deg);}
+	</style>
+</head>
+<body>
+</body>
+<script>
+//利用js+css动画的方式创建时钟；有一个缺点秒针会有点不准可能与页面的加载时间有关系
+var body=document.getElementsByTagName('body')[0];
+//创建时钟元素
+(function(){
+	var cClock=document.createElement('ul')
+		,cHoursKedu=document.createElement('ul')
+		,cSecondsKedu=document.createElement('ul')
+		,cZhizhen=document.createElement('ul');
+	//添加刻度
+	for (var i = 0; i < 12; i++) {
+		var Hkedu=document.createElement('li');
+		Hkedu.style.transform='translateX(-50%) rotate('+30*(i+1)+'deg)';//添加时针数字
+		Hkedu.classList.add('HK');
+		cHoursKedu.appendChild(Hkedu);
+	}
+	for (var i = 0; i < 60; i++) {
+		var Skedu=document.createElement('li');
+		Skedu.style.transform='translateX(-50%) rotate('+6*i+'deg)';
+		Skedu.classList.add('SK');
+		cSecondsKedu.appendChild(Skedu);
+	}
+	//添加指针
+	for (var i = 0; i < 4; i++) {
+		switch (i){
+			case 0:
+				var zZhen=document.createElement('li');
+				zZhen.id='hour';
+				break;
+			case 1:
+				var zZhen=document.createElement('li');
+				zZhen.id='minute';
+				break;
+			case 2:
+				var zZhen=document.createElement('li');
+				zZhen.id='second';
+				break;
+			case 3:
+				var zZhen=document.createElement('div');
+				zZhen.id='zhenCover';
+				break;
+		}
+		cZhizhen.appendChild(zZhen);
+	}
+	//添加id
+	cClock.id='box';
+	cHoursKedu.id='hourKedu';
+	cSecondsKedu.id='secondKedu';
+	cZhizhen.id='zhen';
+	//添加元素到页面
+	cClock.appendChild(cHoursKedu);
+	cClock.appendChild(cSecondsKedu);
+	cClock.appendChild(cZhizhen);
+	body.appendChild(cClock);
+}());
+//设置时钟
+(function(){
+	var hourZhen=document.getElementById('hour');
+	var minuteZhen=document.getElementById('minute');
+	var secondZhen=document.getElementById('second');
+	var oHK=document.getElementsByClassName('HK');
+	var oBox=document.getElementById('box');
+	//通过new Date()初始化指针方向,然后时针分针使用css缓动动画
+	var date=new Date();
+	var hour=date.getHours();
+	var minute=date.getMinutes();
+	var second=date.getSeconds();
+
+	hour>12? hour=hour-12:null;//转十二制时辰
+	//计算现在时分秒针的位置,计算时针的时候注意要加上当前分针和秒针的deg
+	var nowHourRotate=hour*30+(minute/60)*30+(second/60)*0.5;
+	var nowMinuteRotate=minute*6+(second/60)*6;
+	var nowSecondRotate=second*6;
+	//获取cssRules并添加样式表
+	var styles=document.styleSheets[0];
+	styles.insertRule('@keyframes hourmove{from{transform:translate(-50%) rotate('+nowHourRotate+'deg)}to{transform:translate(-50%) rotate('+(360+nowHourRotate)+'deg)}}');
+	styles.insertRule('@keyframes minutemove{from{transform:translate(-50%) rotate('+nowMinuteRotate+'deg)}to{transform:translate(-50%) rotate('+(360+nowMinuteRotate)+'deg)}}');
+	//styles.insertRule('@keyframes secondmove{from{transform:translate(-50%) rotate('+nowSecondRotate+'deg)}to{transform:translate(-50%) rotate('+(360+nowSecondRotate)+'deg)}}');//这里是css控制秒针
+	//js控制秒钟更加准确些
+	function clock(){
+		var second=new Date().getSeconds();
+		secondZhen.style.transform='translateX(-50%) rotate('+(second+1)*6+'deg)';//second需要1个提前量
+	}
+	clock();
+	var clockTimer=setInterval(clock,1000);//要一秒一秒的获取
+	var blackColor,whiteColor;
+	//白天黑夜更换时钟的颜色
+	((date.getHours()>=6&&date.getHours()<18)&&minute>=0&&second>=0)? (blackColor='#000')+(whiteColor='#fff'):(blackColor='#fff')+(whiteColor='#000');
+	for (var i = 0; i < oHK.length; i++) {
+		oHK[i].style.backgroundColor=blackColor;
+	}
+	hourZhen.style.backgroundColor=blackColor;
+	minuteZhen.style.backgroundColor=blackColor;
+	styles.insertRule('.HK::after{color:'+blackColor+'}');
+	styles.insertRule('#hour::after{background-color:'+whiteColor+'}');
+	styles.insertRule('#minute::after{background-color:'+whiteColor+'}');
+	oBox.style.backgroundColor=whiteColor;
+}())
+</script>
+</html>
